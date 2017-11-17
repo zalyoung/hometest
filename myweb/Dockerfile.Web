@@ -1,0 +1,5 @@
+FROM nginx:1.13.6-alpine
+MAINTAINER ericzhangyang@hotmail.com
+WORKDIR /usr/share/nginx
+COPY ./myweb/target/web.zip .
+RUN unzip web.zip && rm -rf html && mv myweb/web html && rmdir myweb 

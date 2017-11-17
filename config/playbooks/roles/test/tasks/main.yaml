@@ -1,0 +1,5 @@
+---
+# This Playbook Install Docker
+
+  - name: Set Hostname
+    hostname: name=test-{{ hostname }}

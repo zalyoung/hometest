@@ -1,0 +1,10 @@
+[docker]
+10.3.236.229 ansible_ssh_user=root ansible_ssh_pass=root hostname=dockernode01
+10.3.236.246 ansible_ssh_user=root ansible_ssh_pass=root hostname=dockernode02
+
+
+[dev]
+10.3.236.229 ansible_ssh_user=root ansible_ssh_pass=root hostname=dockernode01
+
+[test]
+10.3.236.229 ansible_ssh_user=root ansible_ssh_pass=root hostname=dockernode01

@@ -1,0 +1,44 @@
+// script Pipeline //
+node {
+    
+    stage ("checkout"){
+        git url: 'https://github.com/myownsoul/Demo.git'
+    }
+
+       stage('Build') {
+           try{
+               sh 'cd webdemo && ./gradlew build -x test'
+           }catch(e){
+               echo("Build Failed in Jenkins!")
+               throw e
+           }       
+        }
+
+        stage('Test') {
+            try{
+                sh 'cd webdemo && ./gradlew test'
+            }catch(e){
+                echo("Test Failed in Jenkins!")
+                throw e
+            }
+        }
+
+        stage('Deploy') {
+            try{
+                sh """
+                    set -e
+                    ssh tomcat@172.17.0.3 'bash -s' < checktomcatstatus.sh
+                    cd /var/jenkins_home/workspace/tw-ci-demo/webdemo/build/libs
+                    scp webdemo.war tomcat@172.17.0.3:/opt/tomcat/webapps
+                    ssh tomcat@172.17.0.3 '
+                        cd /opt/tomcat/bin
+                        ./startup.sh
+                    '
+                """
+            }catch(e){
+                echo "Deploy failed"
+                throw e
+            }
+        }
+    
+}

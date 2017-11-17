@@ -1,0 +1,29 @@
+#!/bin/bash
+export IMAGE_TAG=`git rev-parse --short HEAD`
+# War Package for Dynamic Resources
+docker run --rm --name myweb-maven -v "$PWD"/myweb:/usr/src/mymaven -w /usr/src/mymaven maven:3.5.2-jdk-8-alpine mvn install
+
+# Zip Package for Static Resources
+zip -r myweb/target/web.zip myweb/web
+
+# Build Docker images
+docker build -f myweb/Dockerfile.App -t myweb/app:dev-$IMAGE_TAG .
+docker build -f myweb/Dockerfile.Web -t myweb/web:dev-$IMAGE_TAG .
+
+# Start Containerize Applications
+docker ps |grep myweb_app
+if [ $? -eq 0 ]
+then
+   docker stop myweb_app && docker rm -v myweb_app 
+fi
+docker run -d -p 8880:8080 --name myweb_app myweb/app:dev-`git rev-parse --short HEAD`
+
+docker ps |grep myweb_web
+if [ $? -eq 0 ]
+then
+   docker stop myweb_web && docker rm -v myweb_web 
+fi
+
+docker run -d -p 8080:80 --name myweb_web myweb/web:dev-`git rev-parse --short HEAD`
+
+rm -rf myweb/target

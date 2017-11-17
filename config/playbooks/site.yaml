@@ -1,0 +1,23 @@
+---
+# This Playbook Zabbix
+
+- name: Install Docker
+  hosts: docker
+  tags:
+    - docker
+  roles:
+    - docker
+
+# - name: Install jenkis
+#   hosts: dev
+#   tags:
+#       - dev
+#   roles:
+#     - dev
+#
+# - name: Install test
+#   hosts: test
+#   tags:
+#       - test
+#   roles:
+#     - test
