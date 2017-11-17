@@ -1,0 +1,12 @@
+---
+# This Playbook Deploy Application 
+
+# Pull the images with prd tag
+  - name: Set Hostname
+    hostname: name=dev-{{ hostname }}
+
+# Stop the app containers if exist
+
+
+# Start the app containers with new images
+

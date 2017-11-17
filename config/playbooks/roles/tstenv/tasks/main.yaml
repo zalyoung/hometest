@@ -1,0 +1,22 @@
+---
+# This Playbook Deploy Application 
+
+# Pull the images with tst tag
+  - name: Set Hostname
+    hostname: name=dev-{{ hostname }}
+
+# Stop the app containers if exist
+
+
+# Start the app containers with new images
+
+
+# Tag the images with new tag prd
+
+
+# Push the images with prd to registry
+
+
+
+
+
