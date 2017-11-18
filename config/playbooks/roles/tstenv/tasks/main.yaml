@@ -1,22 +1,32 @@
 ---
-# This Playbook Deploy Application 
+# This Playbook Install Docker (Only For CentOS 7)
+  
+  - name: Pull images
+    command: docker pull $REGISTRY/myweb-web:prd-$IMG_TAG  
 
-# Pull the images with tst tag
-  - name: Set Hostname
-    hostname: name=dev-{{ hostname }}
+  - name: Pull images
+    command: docker pull $REGISTRY/myweb-app:prd-$IMG_TAG  
 
-# Stop the app containers if exist
+  - name: Stop and Remove container if exist
+    command: docker stop myweb-web && docker rm -v myweb-web 
 
+  - name: Stop and Remove container if exist
+    command: docker stop myweb-app && docker rm -v myweb-app 
 
-# Start the app containers with new images
+  - name: Start container with new image
+    command: docker run -d -p 8880:8080 --name myweb_app $REGISTRY/myweb-app:tst-$IMG_TAG
 
+  - name: Start container with new image
+    command: docker run -d -p 8080:80 --name myweb_web $REGISTRY/myweb-web:tst-$IMG_TAG
 
-# Tag the images with new tag prd
+  - name: Tag the image with PROD 
+    command: docker tag $REGISTRY/myweb-app:tst-$IMG_TAG $REGISTRY/myweb-app:prd-$IMG_TAG 
 
+  - name: Tag the image with PROD 
+    command: docker tag $REGISTRY/myweb-web:tst-$IMG_TAG $REGISTRY/myweb-web:prd-$IMG_TAG 
 
-# Push the images with prd to registry
-
-
-
-
-
+  - name: Push the image
+    command: docker push $REGISTRY/myweb-app:prd-$IMG_TAG
+  
+  - name: Push the image
+    command: docker push $REGISTRY/myweb-web:prd-$IMG_TAG

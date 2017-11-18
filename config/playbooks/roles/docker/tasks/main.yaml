@@ -1,45 +1,21 @@
 ---
-# This Playbook Install Docker
+# This Playbook Install Docker (Only For CentOS 7)
 
-  - name: Set Hostname
-    hostname: name=docker-{{ hostname }}
-
-  - name: Install SoftWare For CentOS
+  - name: Install SoftWare For CentOS 7
     yum: name={{ item }} state=latest
     with_items:
       - yum-utils
       - lvm2
       - device-mapper-persistent-data
-    when: ansible_pkg_mgr == "yum"
-
-  - name: Install SoftWare For Ubuntu
-    apt: name={{ item }} state=latest
-    with_items:
-      - apt-transport-https
-      - ca-certificates
-      - gnupg2
-      - software-properties-common
-    when: ansible_pkg_mgr == "apt"
 
   - name: Upload Docker REPO For CentOS
     copy: src=docker.repo dest=/etc/yum.repos.d/
-    when: ansible_pkg_mgr == "yum" and ansible_distribution_major_version == "7"
-
-  - name: Upload Docker REPO For Ubuntu stp 01
-    apt_key: url=http://mirrors.aliyun.com/docker-ce/linux/ubuntu/gpg state=present
-    when: ansible_pkg_mgr == "apt" and ansible_distribution_major_version == "16"
-
-  - name: Upload Docker REPO For Ubuntu stp 02
-    apt_repository: repo='deb [arch=amd64] http://mirrors.aliyun.com/docker-ce/linux/ubuntu xenial stable' filename='docker-ce'
-    when: ansible_pkg_mgr == "apt" and ansible_distribution_major_version == "16"
 
   - name: Install Docker For CentOS
-    yum: name=docker-engine-{{ DOCKER_VERSION }}* state=present
-    when: ansible_pkg_mgr == "yum" and ansible_distribution_major_version == "7"
+    yum: name=docker-engine-* state=present
 
-  - name: Install Docker For Ubuntu
-    apt: name=docker-ce={{ DOCKER_VERSION }}* state=present
-    when: ansible_pkg_mgr == "apt" and ansible_distribution_major_version == "16"
+  - name: Configure Docker 
+    copy: src=docker.service dest=/usr/lib/systemd/system/    
 
   - name: Start Docker
     service: name=docker state=restarted enabled=yes

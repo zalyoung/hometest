@@ -1,23 +1,23 @@
 ---
-# This Playbook Zabbix
+# Playbook for Continues Deploy 
 
-- name: Install Docker
+- name: Install Docker Engine
   hosts: docker
-  tags:
-    - docker
   roles:
     - docker
+  tags:
+    - docker
 
-# - name: Install jenkis
-#   hosts: dev
-#   tags:
-#       - dev
-#   roles:
-#     - dev
-#
-# - name: Install test
-#   hosts: test
-#   tags:
-#       - test
-#   roles:
-#     - test
+- name: Test Env Deploy
+  hosts: tstenv
+  roles:
+    - tstenv
+  tags:
+    - tstenv
+
+- name: Prod Env Deploy
+  hosts: prdenv
+  roles:
+    - prdenv
+  tags:
+    - prdenv
