@@ -2,10 +2,10 @@
 # This Playbook Install Docker (Only For CentOS 7)
   
   - name: Pull images
-    command: docker pull $REGISTRY/myweb-web:prd-$IMG_TAG  
+    command: docker pull $REGISTRY/myweb-web:$TST_IMG_TAG  
 
   - name: Pull images
-    command: docker pull $REGISTRY/myweb-app:prd-$IMG_TAG  
+    command: docker pull $REGISTRY/myweb-app:$TST_IMG_TAG  
 
   - name: Stop and Remove container if exist
     command: docker stop myweb-web && docker rm -v myweb-web 
@@ -14,19 +14,22 @@
     command: docker stop myweb-app && docker rm -v myweb-app 
 
   - name: Start container with new image
-    command: docker run -d -p 8880:8080 --name myweb_app $REGISTRY/myweb-app:tst-$IMG_TAG
+    command: docker run -d -p 8880:8080 --name myweb_app $REGISTRY/myweb-app:$TST_IMG_TAG
 
   - name: Start container with new image
-    command: docker run -d -p 8080:80 --name myweb_web $REGISTRY/myweb-web:tst-$IMG_TAG
+    command: docker run -d -p 8080:80 --name myweb_web $REGISTRY/myweb-web:$TST_IMG_TAG
+
+  - name: Set PRD tag env
+    command: export PRD_IMG_TAG="prd-`echo $TST_IMG_TAG|awk -F "-" {'print $2"-"$3'}`"
 
   - name: Tag the image with PROD 
-    command: docker tag $REGISTRY/myweb-app:tst-$IMG_TAG $REGISTRY/myweb-app:prd-$IMG_TAG 
+    command: docker tag $REGISTRY/myweb-app:$TST_IMG_TAG $REGISTRY/myweb-app:$PRD_IMG_TAG
 
   - name: Tag the image with PROD 
-    command: docker tag $REGISTRY/myweb-web:tst-$IMG_TAG $REGISTRY/myweb-web:prd-$IMG_TAG 
+    command: docker tag $REGISTRY/myweb-web:$TST_IMG_TAG $REGISTRY/myweb-web:$PRD_IMG_TAG
 
   - name: Push the image
-    command: docker push $REGISTRY/myweb-app:prd-$IMG_TAG
+    command: docker push $REGISTRY/myweb-app:$PRD_IMG_TAG
   
   - name: Push the image
-    command: docker push $REGISTRY/myweb-web:prd-$IMG_TAG
+    command: docker push $REGISTRY/myweb-web:$PRD_IMG_TAG

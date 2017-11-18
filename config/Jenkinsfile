@@ -1,4 +1,4 @@
-:/ script Pipeline //
+env.TST_IMG_TAG=$IMG_TAG
 node {
        stage(' Env Check') {
         if (`sh config/docker-check` == true)
@@ -7,9 +7,18 @@ node {
          sh "ansible-playbook -C config/playbooks/site.yaml -i config/playbooks/hosts -t docker"                
          } 
 
+env.TST_IMG_TAG=
+
        stage('TST Deploy') {
          sh "ansible-playbook -C config/playbooks/site.yaml -i config/playbooks/hosts -t tstenv"
                }
+
+env.PRD_IMG_TAG="prd-`echo $IMG_TAG|awk -F "-" {'print $2"-"$3'}`"
+
+       stage('IMG Push') {
+         sh "ansible-playbook -C config/playbooks/site.yaml -i config/playbooks/hosts -t pushimg"
+               }
+
         stage('PRD Deploy') {
          sh "ansible-playbook -C config/playbooks/site.yaml -i config/playbooks/hosts -t prdenv"
             }
