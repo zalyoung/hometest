@@ -1,6 +1,0 @@
-[dockerrepo]
-name=Docker Repository
-baseurl={{ DOCKER_BASE_URL }}
-enabled=1
-gpgcheck=1
-gpgkey=https://mirrors.tuna.tsinghua.edu.cn/docker/yum/gpg
