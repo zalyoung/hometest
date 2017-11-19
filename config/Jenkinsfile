@@ -14,4 +14,3 @@ node {
               env.RANCHER_STACK = "Benz-web"
               sh ''' '''
        }
-}
