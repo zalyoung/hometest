@@ -1,9 +1,0 @@
-[docker]
-139.198.188.39  ansible_ssh_user=root hostname=tstServer
-139.198.188.221 ansible_ssh_user=root hostname=prdServer
-
-[tstenv]
-139.198.188.39  ansible_ssh_user=root hostname=tstServer
-
-[prdenv]
-139.198.188.221 ansible_ssh_user=root hostname=prdServer
