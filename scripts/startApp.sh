@@ -8,7 +8,7 @@ then
 fi
 
 # Start app container with latest image
-docker run -d -p 8880:8080 --name myweb_app ${env.APP_IMG}
+docker run -d -p 8880:8080 --name myweb_app ${APP_IMG}
 
 
 # Check whether web container is exist
@@ -19,4 +19,4 @@ then
 fi
 
 # Start web container with latest image
-docker run -d -p 8080:80 --name myweb_web ${env.WEB_IMG} 
+docker run -d -p 8080:80 --name myweb_web ${WEB_IMG} 
