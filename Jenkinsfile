@@ -4,6 +4,7 @@ env.WEB_IMAGE = "${env.IMG_REG}/myweb-web"
 env.APP_IMAGE = "${env.IMG_REG}/myweb-app"
 env.TST_IMG_TAG = "tst-${env.BUILD_NUMBER}"
 env.PRD_IMG_TAG = "prd-${env.BUILD_NUMBER}"
+env.BLD_SERVER = "tcp://127.0.0.1:2375"
 env.TST_SERVER = "tcp://139.198.188.39:2375"
 env.PRD_SERVER = "tcp://139.198.188.221:2375"
 
@@ -15,6 +16,7 @@ node {
               sh "mvn install -f myweb/pom.xml"
               sh "zip -r myweb/target/web.zip myweb/web"
        stage 'PACKAGE'
+              sh "export DOCKER_HOST=${env.BLD_SERVER}"
               sh "docker build -f myweb/Dockerfile.App -t ${env.APP_IMAGE}:${env.TST_IMG_TAG} ."
               sh "docker build -f myweb/Dockerfile.Web -t ${env.WEB_IMAGE}:${env.TST_IMG_TAG} ."
        stage 'PUBLISH'
