@@ -29,7 +29,7 @@ node {
               env.APP_IMG="${env.APP_IMAGE}:${env.TST_IMG_TAG}"
               env.WEB_IMG="${env.WEB_IMAGE}:${env.TST_IMG_TAG}"
               withDockerServer([uri: "${env.TST_SERVER}"]) {
-              sh "export APP_IMG=${env.APP_IMG} && export WEB_IMG=${env.WEB_IMG} scripts/startApp.sh"
+              sh "export APP_IMG=${env.APP_IMG} && export WEB_IMG=${env.WEB_IMG} && scripts/startApp.sh"
               }
        stage 'RELEASE'
               withDockerServer([uri: "${env.TST_SERVER}"]) {
@@ -42,6 +42,6 @@ node {
               env.APP_IMG="${env.APP_IMAGE}:${env.PRD_IMG_TAG}"
               env.WEB_IMG="${env.WEB_IMAGE}:${env.PRD_IMG_TAG}"
               withDockerServer([uri: "${env.PRD_SERVER}"]) {
-              sh "export APP_IMG=${env.APP_IMG} && export WEB_IMG=${env.WEB_IMG} scripts/startApp.sh"
+              sh "export APP_IMG=${env.APP_IMG} && export WEB_IMG=${env.WEB_IMG} && scripts/startApp.sh"
               }
        }
