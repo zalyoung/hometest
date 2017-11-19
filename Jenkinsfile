@@ -1,4 +1,4 @@
-env.SCM_URL = "git@github.com:myownsoul/hometest.git"
+env.SCM_URL = "https://github.com/myownsoul/hometest.git"
 env.IMG_REG = "registry.devops.local:5000"
 env.WEB_IMAGE = "${env.IMG_REG}/myweb-web"
 env.APP_IMAGE = "${env.IMG_REG}/myweb-app"
