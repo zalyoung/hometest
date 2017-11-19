@@ -21,8 +21,8 @@ node {
               sh "docker push ${APP_IMAGE}:${TST_IMG_TAG}"
               sh "docker push ${WEB_IMAGE}:${TST_IMG_TAG}"
        stage 'DEPLOY-TST'
-              env.APP_IMG=${APP_IMAGE}:${TST_IMG_TAG}"
-              env.WEB_IMG=${WEB_IMAGE}:${TST_IMG_TAG}"
+              env.APP_IMG="${APP_IMAGE}:${TST_IMG_TAG}"
+              env.WEB_IMG="${WEB_IMAGE}:${TST_IMG_TAG}"
               sh " export DOCKER_HOST="tcp://${TST_SERVER}:2375""
               sh "scripts/startApp.sh"
        stage 'RELEASE'
@@ -32,8 +32,8 @@ node {
               sh "docker push ${APP_IMAGE}:${PRD_IMG_TAG}"
               sh "docker push ${WEB_IMAGE}:${PRD_IMG_TAG}"
        stage 'DEPLOY-PRD'
-              env.APP_IMG=${APP_IMAGE}:${PRD_IMG_TAG}
-              env.WEB_IMG=${WEB_IMAGE}:${PRD_IMG_TAG}
+              env.APP_IMG="${APP_IMAGE}:${PRD_IMG_TAG}"
+              env.WEB_IMG="${WEB_IMAGE}:${PRD_IMG_TAG}"
               sh "export DOCKER_HOST="tcp://${PRD_SERVER}:2375""
               sh "scripts/startApp.sh"
        }
