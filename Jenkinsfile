@@ -12,7 +12,7 @@ node {
        stage 'CHECKOUT'
              git url: "${env.SCM_URL}"
        stage 'BUILD'
-              sh "mvn install if myweb/pom.xml"
+              sh "mvn install -f myweb/pom.xml"
               sh "zip -r myweb/target/web.zip myweb/web"
        stage 'PACKAGE'
               sh "docker build -f myweb/Dockerfile.App -t ${env.APP_IMAGE}:${env.TST_IMG_TAG}"
