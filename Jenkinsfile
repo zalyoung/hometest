@@ -16,17 +16,19 @@ node {
               sh "mvn install -f myweb/pom.xml"
               sh "zip -r myweb/target/web.zip myweb/web"
        stage 'PACKAGE'
-              sh "export DOCKER_HOST=${env.BLD_SERVER}"
+              withDockerServer([uri: '${env.BLD_SERVER}']) {
               sh "docker build -f myweb/Dockerfile.App -t ${env.APP_IMAGE}:${env.TST_IMG_TAG} ."
               sh "docker build -f myweb/Dockerfile.Web -t ${env.WEB_IMAGE}:${env.TST_IMG_TAG} ."
+              }
        stage 'PUBLISH'
               sh "docker push ${env.APP_IMAGE}:${env.TST_IMG_TAG}"
               sh "docker push ${env.WEB_IMAGE}:${env.TST_IMG_TAG}"
        stage 'DEPLOY-TST'
               env.APP_IMG="${env.APP_IMAGE}:${env.TST_IMG_TAG}"
               env.WEB_IMG="${env.WEB_IMAGE}:${env.TST_IMG_TAG}"
-              sh "export DOCKER_HOST=${env.TST_SERVER}"
+              withDockerServer([uri: '${env.TST_SERVER}']) {
               sh "scripts/startApp.sh"
+              }
        stage 'RELEASE'
               sh "export DOCKER_HOST=${env.TST_SERVER}"
               sh "docker tag ${env.APP_IMAGE}:${env.TST_IMG_TAG} ${env.APP_IMAGE}:${env.PRD_IMG_TAG}"
@@ -36,6 +38,7 @@ node {
        stage 'DEPLOY-PRD'
               env.APP_IMG="${env.APP_IMAGE}:${env.PRD_IMG_TAG}"
               env.WEB_IMG="${env.WEB_IMAGE}:${env.PRD_IMG_TAG}"
-              sh "export DOCKER_HOST=${env.PRD_SERVER}"
+              withDockerServer([uri: '${env.PRD_SERVER}']) {
               sh "scripts/startApp.sh"
+              }
        }
