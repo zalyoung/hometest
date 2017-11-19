@@ -15,8 +15,8 @@ node {
               sh "mvn install -f myweb/pom.xml"
               sh "zip -r myweb/target/web.zip myweb/web"
        stage 'PACKAGE'
-              sh "docker build -f myweb/Dockerfile.App -t ${env.APP_IMAGE}:${env.TST_IMG_TAG}"
-              sh "docker build -f myweb/Dockerfile.Web -t ${env.WEB_IMAGE}:${env.TST_IMG_TAG}"
+              sh "docker build -f myweb/Dockerfile.App -t ${env.APP_IMAGE}:${env.TST_IMG_TAG} ."
+              sh "docker build -f myweb/Dockerfile.Web -t ${env.WEB_IMAGE}:${env.TST_IMG_TAG} ."
        stage 'PUBLISH'
               sh "docker push ${env.APP_IMAGE}:${env.TST_IMG_TAG}"
               sh "docker push ${env.WEB_IMAGE}:${env.TST_IMG_TAG}"
