@@ -1,131 +1,50 @@
-# 设计思路
-- 交付流水线分为开发、测试和生产三个环境，使用 Jenkins Pipeline 实现交付的自动化；
-- 开发者在开发环境commit之后即可进行预提交测试，通过后push即可触发交付件自动构建和测试、生产环境的自动部署；
-- 使用 Docker 镜像和容器实现交付件和运行时的标准化和不同环境的一致性；
-- 使用 GitHub 作为源码和配置管理工具，Registry作为制品和版本管理工具。
+# Welcome to the Automated CI/CD Pipeline Project!
 
-## Demo流程
-![](process.png)  
-注:demo仅包含蓝色部分
+This project demonstrates a complete Continuous Integration and Continuous Delivery (CI/CD) pipeline for a web application. It's designed to automate the software delivery process, making it faster, more reliable, and consistent.
 
+## Core Technologies
 
-## Demo环境
-![](architecture.png)    
+At the heart of this project are several industry-standard technologies:
 
-- Web访问地址  
-`http://HOST_IP:8080`
-- App访问地址  
-`http://HOST_IP:8880`
+*   **Jenkins:** An open-source automation server that orchestrates the entire CI/CD pipeline. The pipeline is defined as code using a `Jenkinsfile`.
+*   **Docker:** Used for containerizing the application and its web server. Docker ensures that the application runs consistently across different environments (Development, Testing, Production) by packaging it with all its dependencies.
+*   **GitHub:** Serves as the Source Code Management (SCM) system, hosting the application's codebase and triggering the CI/CD pipeline upon code changes.
+*   **Docker Registry:** Used to store and manage versioned Docker images, which are the artifacts of our build process.
 
+## The CI/CD Workflow
 
-# 文件结构
+Our development and deployment workflow is streamlined for efficiency and reliability:
 
-## Jenkinsfile     
-- Jenkins Pipeline 配置文件 
+1.  **Development:** Developers work in isolated development environments and can run pre-commit tests locally to catch issues early.
+2.  **Version Control:** Code changes are pushed to the GitHub repository.
+3.  **Automated Pipeline Trigger:** Each push to the repository automatically triggers the Jenkins pipeline.
+4.  **Build & Test:** The pipeline builds Docker images for the application and web server (`Dockerfile.App`, `Dockerfile.Web`). Automated tests are then executed to ensure code quality.
+5.  **Deployment:** Upon successful testing, the pipeline automatically deploys the application to the production environment.
 
-## myweb 源码目录  
-- myweb/Dockerfile.App (构建App Dockerfile)  
-- myweb/Dockerfile.Web (构建Web Dockerfile)  
-- myweb/src (APP源码 war)  
-- myweb/web (WEB码 zip)  
+This automated process ensures that every change is consistently built, tested, and deployed, reducing manual effort and the risk of errors.
 
+For a visual representation of this workflow, please see the `process.png` diagram included in this repository.
 
-## scripts 脚本目录
-- scripts/initCDSrv.sh ( CI/CD 服务器初始化脚本)  
-- scripts/initEnv.sh (开发/测试/生产环境 Docker 安装配置脚本)  
-- scripts/post-commit (开发环境应用启动 hook)  
-- scripts/startApp.sh（测试/生产环境应用启动脚本）  
+## Project Structure
 
-# 部署方式
-1. 准备好每个环境需要的服务器  
-注: 本Demo仅在CentOS 7下做过测试  
-  
-2. 将仓库克隆到每台服务器  
- `git clone https://github.com/myownsoul/hometest.git`   
-  
-3. 初始化开发/测试/生产的服务器  
- `scripts/initEnv.sh`       
-  
-4. 初始化持续集成/持续部署服务器  
- `scripts/initCDSrv.sh`     
-  
-5. 配置 Jenkins   
-   - 插件安装:
-   > CloudBees Docker Build and Publish plugin  
-   > Git plugin  
-   > GitHub plugin  
-   > Maven Integration plugin  
-   > Pipeline  
-   
-   
-   - 工具配置:
-   > JDK(JAVA\_HOME) `/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.151-1.b12.el7_4.x86_64`  
-   > Git(Path) `/usr/bin/git`  
-   > Maven(MAVEN\_HOME) `/usr/share/maven`  
-   > Docker(Root) `/usr/bin`
-  
-6. 新建`Pipeline Item`并完成`SCM`配置。  
+The repository is organized as follows:
 
-# Pipeline Sample
-  ![](sample.png) 
-  
-  注: 根据实际的环境修改`Jenkinsfile`的环境变量  
+*   `Jenkinsfile`: Defines the CI/CD pipeline stages and steps executed by Jenkins.
+*   `myweb/`: Contains all the source code and Dockerfiles for the application.
+    *   `Dockerfile.App`: Instructions for building the application's Docker image.
+    *   `Dockerfile.Web`: Instructions for building the web server's Docker image.
+    *   `myweb/src/`: Source code for the Java-based web application (packaged as a WAR file).
+    *   `myweb/web/`: Static web content such as HTML pages, images, etc.
+*   `scripts/`: A collection of utility shell scripts for tasks like:
+    *   `initCDSrv.sh`: Initializing the CI/CD server.
+    *   `initEnv.sh`: Setting up Docker environments.
+    *   `post-commit`: A Git hook for post-commit actions in the development environment.
+    *   `startApp.sh`: Starting the application in testing or production.
 
-      
-# 生产运维管理   
-以容器一等公民的生产环境，至少需要具备以下两点  
+To understand the overall system architecture, please refer to the `architecture.png` diagram.
 
-- 去中心化的自愈型基础平台支撑  
-- 集中化的日志和监控告警管理
-  
-## 高可用  
-- 容器高可用  
-> 容器编排系统  
+## Getting Started
 
-- 应用高可用  
-> 负载均衡  
-> 服务注册与发现  
-> 服务熔断   
+This project serves as a practical example of implementing CI/CD practices. Whether you are a developer looking to understand automated deployment, an operations engineer interested in infrastructure as code, or simply curious about CI/CD, we hope you find this project insightful.
 
-- 数据高可用  
-> 公有云数据/存储服务  
-> 自建高可用数据库/存储集群   
-
-  **注:**不推荐生产环境使用容器承载有状态应用
-
-## 集中监控  
-- 主机监控  
- > 主机资源监控  
- > 主机状态监控   
-
-- 容器平台监控  
->  平台资源监控  
->  组件状态监控  
-
-- 应用(容器)监控  
-> 可用性监控  
-> 性能监控
- 
-- 告警管理
-> 阈值设置  
-> 告警触发  
-> 自动通知
-    
-## 集中日志   
-- 主机日志
-> 系统日志  
-> 登陆日志  
-  
-- 容器平台日志  
-> 组件运行日志  
-  
-- 应用(容器)日志  
-> 运行日志  
-> 访问日志  
-> 错误日志
-
-- 可视化  
-> 图形  
-> 报表  
-
-  
+We encourage you to explore the codebase, examine the `Jenkinsfile`, and see how the different components work together. Welcome aboard!
